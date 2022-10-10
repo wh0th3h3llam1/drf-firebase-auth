@@ -4,49 +4,62 @@
 
 {% block content %}
 
-  <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-    <div class="mdl-card mdl-shadow--8dp table-of-contents">
-      <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
-        <h2 class="mdl-card__title-text">Table of Contents</h2>
-      </div>
-      <div class="mdl-card__supporting-text">
-        <ul>
-          <li>
-              <a href="anonymous.html">Anonymous</a><br><br>
-          </li>
-          <li>
-              <a href="email-password.html">Email and Password authentication</a>
-          </li>
-          <li>
-              <a href="email-link.html">Email Link authentication</a><br><br>
-          </li>
-          <li>
-              <a href="phone-visible.html">Phone number sign-in with visible ReCaptcha</a>
-          </li>
-          <li>
-              <a href="phone-invisible.html">Phone number sign-in with Invisible ReCaptcha</a>
-          </li>
-          <li>
-              <a href="phone-simple.html">
-              Phone number sign-in with simplified popup flow (not recommended for
-                production apps)
-              </a>
-          </li>
-        </ul>
-      </div>
-      <div class="mdl-card__actions mdl-card--border">
-        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-          Get Started
-        </a>
-      </div>
-      <div class="mdl-card__menu">
-        <button class="mdl-button mdl-js-button mdl-button--icon white-font" id="refresh-button" onclick="window.location.reload()">
-          <i class="material-icons">refresh</i>
-        </button>
-      </div>
+<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+  <div class="mdl-card mdl-shadow--8dp table-of-contents">
+    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+      <h2 class="mdl-card__title-text">Table of Contents</h2>
     </div>
-
+    <div class="mdl-card__supporting-text">
+      <div class="red-font">
+        <strong><em>WARNING: DO NOT use in Production!</em></strong>
+      </div>
+      <br>
+      <p>
+        There are multiple methods available for authentication with Firebase.
+        Ensure that the appropriate sign-in method has been enabled in the
+        <a href="https://firebase.google.com/docs/auth">Firebase Console Authentication Panel</a>
+      </p>
+      <ul class="mdl-list">
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">person_off</i>
+            <a href="anonymous.html">Anonymous Authentication</a>
+          </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">mail_lock</i>
+            <a href="email-password.html">Email and Password Authentication</a>
+          </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">attach_email</i>
+            <a href="email-link.html">Email Link Authentication</a><br><br>
+          </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">phone_in_talk</i>
+            <a href="phone-visible.html">Phone Number Sign-In with Visible ReCaptcha</a>
+          </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">call</i>
+            <a href="phone-invisible.html">Phone Number Sign-In with Invisible ReCaptcha</a>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="mdl-card__menu">
+      <button class="mdl-button mdl-js-button mdl-button--icon white-font" id="refresh-button"
+        onclick="window.location.reload()">
+        <i class="material-icons">refresh</i>
+      </button>
+    </div>
   </div>
-</main>
+</div>
+
 
 {% endblock content %}
