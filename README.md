@@ -20,14 +20,20 @@ A Django REST Wrapper for Firebase Authentication with DRF.
 	<b>Phone Number Authentication - 2</b>
 </p>
 
-## Features
+## 🎉 Features
 
-- Built using [Material Design Lite](https://getmdl.io)
-- Easily Integrates with Django and Django REST Framework
-- Integrates Firebase Authentication
-- Customizable [color scheme](https://getmdl.io/customize/index.html)
-- Supports Phone Number Authentication (Visible/Invisble reCaptcha)
-- Supports WebSocket Firebase Authentication for packages like [channels](https://channels.readthedocs.io/en/stable/) (COMING SOON)
+- ✨Frontend built using [Material Design Lite](https://getmdl.io)
+- ⭐Easily Integrates with Django and Django REST Framework (DRF)
+- 🔥 Firebase Authentication included
+- 📲 Supports Phone Number Authentication (Visible/Invisble reCaptcha)
+
+
+## 🗺️ Roadmap
+
+- 🌈Customizable [color scheme](https://getmdl.io/customize/index.html)
+- 📧Support for Email Link & Email + Password Authentication
+- 🕸 Support for WebSocket Authentication with Firebase for [channels](https://channels.readthedocs.io/en/stable/)
+
 
 ## Dependencies
 
@@ -40,19 +46,18 @@ A Django REST Wrapper for Firebase Authentication with DRF.
 [Firebase Admin Python SDK](https://github.com/firebase/firebase-admin-python)
 
 
-## Installation
+## ⚙️ Installation
 
 ### Git
 `git clone https://github.com/wh0th3h3llam1/drf-firebase-auth.git`
 
 
-## Firebase Authentication Setup
+## 🛠️ Firebase Authentication Setup
 
 ### settings.py
 Add the `FirebaseAuthentication` class to `DEFAULT_AUTHENTICATION_CLASSES`
 
 ```python
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "drf_firebase_auth.authentication.FirebaseAuthentication",
@@ -61,7 +66,6 @@ REST_FRAMEWORK = {
     )
     ...
 }
-
 ```
 
 ### models.py
@@ -70,8 +74,11 @@ Inherit your default `User` model from `AbstractFirebaseUser`
 
 ```python
 class User(AbstractFirebaseUser, PermissionsMixin):
-    pass
-
+    profile_image = models.ImageField(
+        upload_to="user/profile_images",
+        blank=True, null=True
+    )
+    ...
 ```
 
 The `AbstractFirebaseUser` model provided is designed to be compatible with Phone Number Authentication so `phone_number` is a "required and unique" field.
@@ -88,59 +95,19 @@ urlpatterns = [
 ]
 ```
 
-## Websocket with Firebase Authentication Setup
+## ℹ️ Usage
 
-### asgi.py
+### ⚠️ WARNING: DO NOT use in Production!
 
-Assuming that you'll be working with channels
-
-```python
-from django.core.asgi import get_asgi_application
-
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-...
-application = ProtocolTypeRouter({
-    ...
-    # WebSocket Handler
-    "websocket": AuthMiddlewareStack(
-        URLRouter(
-           chat.routing.websocket_urlpatterns
-        )
-    ),
-})
-
-```
-
-Replace `AuthMiddlewareStack` with `FirebaseAuthMiddlewareStack`
-
-```diff
-application = ProtocolTypeRouter({
-    # Django's ASGI application to handle traditional HTTP requests
-    "http": get_asgi_application(),
-
-    # WebSocket Handler
--    "websocket": AuthMiddlewareStack(
-+    "websocket": FirebaseAuthMiddlewareStack(
-        URLRouter(
-           chat.routing.websocket_urlpatterns
-        )
-    ),
-})
-```
+- Navigate to [http://127.0.0.1:8000/firebase](http://127.0.0.1:8000/firebase)
 
 
-## Usage
-
-- Navigate to `127.0.0.1:8000/firebase`
-
-
-## Contributing
+## 🤝 Contributing
 
 Got any issues or suggestions?
 
-Open a Pull Request
+Open a [Issue](https://github.com/wh0th3h3llam1/drf-firebase-auth/issues/)
 
-## Licence
+## 📜 Licence
 
 MIT
