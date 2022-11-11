@@ -1,0 +1,48 @@
+{% extends 'firebase/auth/base.html' %}
+
+{% block title %}About | Firebase Authentication{% endblock title %}
+
+{% block content %}
+
+<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+
+  <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+      <h2 class="mdl-card__title-text">About the Project</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <div class="red-font center">
+        <strong><em>WARNING: DO NOT use in Production!</em></strong>
+      </div>
+      <br>
+      <p>
+        <b class="black-font">DRF Firebase Auth</b> is designed to integrate with
+        <a class="django" href="https://djangoproject.com" target="_blank">
+          Django (3.2+)
+        </a> &
+        <a class="django-rest-framework" href="https://django-rest-framework.org" target="_blank">
+          Django Rest Framework (DRF)
+        </a>
+      </p>
+      <p>
+        It provides a beautiful, simple and minimal UI for backend developers, testers to easily get Firebase Token for Authentication.
+      </p>
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border">
+      <a class="mdl-button mdl-js-button mdl-js-ripple-effect regular-case" href="https://github.com/wh0th3h3llam1">
+        <i class="material-icons">engineering</i>
+        wh0th3h3llam1
+      </a>
+      &nbsp;
+      <a class="mdl-button mdl-js-button mdl-js-ripple-effect"
+        href="https://github.com/wh0th3h3llam1/drf-firebase-auth">
+        <i class="material-icons">code</i>
+        Github
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}

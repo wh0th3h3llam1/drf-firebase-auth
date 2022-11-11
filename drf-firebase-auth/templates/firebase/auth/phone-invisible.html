@@ -24,14 +24,17 @@
         </div>
 
         <!-- Sign-in button -->
-        <button disabled class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect white-font" id="sign-in-button">
+        <button disabled
+          class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect white-font"
+          id="sign-in-button">
           <i class="material-icons">login</i>
           Sign In
         </button>
       </form>
 
       <!-- Button that handles sign-out -->
-      <button class="mdl-button mdl-js-button mdl-button--primary mdl-button--raised mdl-js-ripple-effect white-font" id="sign-out-button">
+      <button class="mdl-button mdl-js-button mdl-button--primary mdl-button--raised mdl-js-ripple-effect white-font"
+        id="sign-out-button">
         <i class="material-icons">logout</i>
         Sign Out
       </button>
@@ -44,12 +47,14 @@
         </div>
 
         <!-- Button that triggers code verification -->
-        <button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect white-font" id="verify-code-button">
+        <button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect white-font"
+          id="verify-code-button">
           <i class="material-icons">done</i>
           Verify Code
         </button>
         <!-- Button to cancel code verification -->
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" id="cancel-verify-code-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect"
+          id="cancel-verify-code-button">
           <i class="material-icons">close</i>
           Cancel
         </button>
@@ -58,7 +63,8 @@
   </div>
 
   <!-- Container for the sign in status and user info -->
-  <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop user-details-container">
+  <div
+    class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop user-details-container">
     <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
       <h2 class="mdl-card__title-text">User Status</h2>
     </div>
@@ -70,8 +76,8 @@
         <pre><code id="account-details">
           <div class="mdl-spinner mdl-js-spinner is-active"></div>
         </code></pre>
-        <br/>
-        
+        <br />
+
         <button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="user-object-button">
           <i class="material-icons">code</i>
           Copy User Object
@@ -79,17 +85,20 @@
       </div>
     </div>
     <div class="mdl-card__menu">
-      <button class="mdl-button mdl-js-button mdl-button--icon white-font" id="refresh-button" onclick="window.location.reload()">
+      <button class="mdl-button mdl-js-button mdl-button--icon white-font" id="refresh-button"
+        onclick="window.location.reload()">
         <i class="material-icons">refresh</i>
       </button>
     </div>
     <div class="mdl-card__actions mdl-card--border">
-      <button class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect mdl-button--raised white-font" id="copy-accessToken-button">
+      <button class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect mdl-button--raised white-font"
+        id="copy-accessToken-button">
         <i class="material-icons">copy_all</i>
         Copy Access Token
       </button>
       &nbsp;
-      <button class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect mdl-button--raised white-font" id="copy-refreshToken-button">
+      <button class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect mdl-button--raised white-font"
+        id="copy-refreshToken-button">
         <i class="material-icons">autorenew</i>
         Copy Refresh Token
       </button>
@@ -100,10 +109,6 @@
       </button>
     </div>
 
-    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
-      <div class="mdl-snackbar__text"></div>
-      <button class="mdl-snackbar__action" type="button"></button>
-    </div>
   </div>
 </div>
 {% endblock content %}
@@ -116,7 +121,7 @@
    * Set up UI event listeners and registering Firebase auth listeners.
    */
   window.onload = initApp();
-  
+
   function initApp() {
     'use strict';
 
@@ -262,6 +267,7 @@
    */
   function onSignOutClick() {
     firebase.auth().signOut();
+    localStorage.removeItem("user_account_details");
   }
 
   /**
@@ -355,15 +361,17 @@
     if (user) {
       document.getElementById('sign-in-status').textContent = 'Signed in';
       document.getElementById('account-details').innerHTML = prettyPrintJson.toHtml(user, prettyPrintJsonOptions);
+      localStorage.setItem("user_account_details", JSON.stringify(user));
     } else {
       document.getElementById('sign-in-status').textContent = 'Signed out';
       document.getElementById('account-details').textContent = 'Not Available';
+      localStorage.removeItem("user_account_details");
     }
   }
-  
+
   function disableButtons() {
     var user = firebase.auth().currentUser;
-    if(!user) {
+    if (!user) {
       document.getElementById('copy-accessToken-button').disabled = true;
       document.getElementById('copy-refreshToken-button').disabled = true;
       document.getElementById('copy-apiKey-button').disabled = true;
@@ -376,13 +384,12 @@
     }
 
   }
-  
+
   function copyApiKey() {
     'use strict';
-    let user = firebase.auth().currentUser;
-    let api_key = user.stsTokenManager.apiKey
+    let api_key = getValue("apiKey");
     let snackBarmessage = "API Key Copied!"
-    if(api_key) {
+    if (api_key) {
       copy(api_key);
     } else {
       snackBarmessage = "No Key Found!"
@@ -392,10 +399,9 @@
 
   function copyRefreshToken() {
     'use strict';
-    let user = firebase.auth().currentUser;
-    let token = user.stsTokenManager.refreshToken
+    let token = getValue("refreshToken");
     let snackBarmessage = "Refresh Token Copied!"
-    if(token) {
+    if (token) {
       copy(token);
     } else {
       snackBarmessage = "No Token Found!"
@@ -405,10 +411,9 @@
 
   function copyAccessToken() {
     'use strict';
-    let user = firebase.auth().currentUser;
-    let token = user.stsTokenManager.accessToken
+    let token = getValue("accessToken");
     let snackBarmessage = "Access Token Copied!"
-    if(token) {
+    if (token) {
       copy(token);
     } else {
       snackBarmessage = "No Token Found!"
@@ -419,10 +424,9 @@
 
   function copyUserObject() {
     'use strict';
-    let user = firebase.auth().currentUser;
-    let token = user
+    let token = getValue("user");
     let snackBarmessage = "User Object Copied!"
-    if(token) {
+    if (token) {
       copyJSON(user)
     } else {
       snackBarmessage = "No User Object Found!"
@@ -439,7 +443,7 @@
 
     var result = document.execCommand('copy');
     document.body.removeChild(input);
-    
+
     return result;
   }
 
@@ -457,21 +461,6 @@
     document.body.removeChild(selBox);
 
     return true
-  }
-
-  function showSnackBar(snackBarmessage) {
-    'use strict';
-    let snackbarContainer = document.querySelector("#snackbar");
-
-    let handler = function(event) { }
-    
-    let data = {
-      message: snackBarmessage,
-      timeout: 5000,
-      actionHandler: handler,
-      actionText: "Okay!",
-    };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
   }
 
 </script>

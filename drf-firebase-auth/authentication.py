@@ -18,7 +18,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
     """
     Firebase Authentication based Django Rest Framework Authentication Class
 
-    Clients shuld authenticate by passing a Firebase ID token in the
+    Clients should authenticate by passing a Firebase ID token in the
     "Authorization" HTTP header, prepended with the string value `keyword` where
     `keyword` string attribute. For example:
 
