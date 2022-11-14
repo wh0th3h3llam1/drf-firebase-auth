@@ -26,12 +26,12 @@ A Django REST Wrapper for Firebase Authentication with DRF.
 - ⭐Easily Integrates with Django and Django REST Framework (DRF)
 - 🔥 Firebase Authentication included
 - 📲 Supports Phone Number Authentication (Visible/Invisble reCaptcha)
+- 📧Supports Email Link & Email + Password Authentication
 
 
 ## 🗺️ Roadmap
 
 - 🌈Customizable [color scheme](https://getmdl.io/customize/index.html)
-- 📧Support for Email Link & Email + Password Authentication
 - 🕸 Support for WebSocket Authentication with Firebase for [channels](https://channels.readthedocs.io/en/stable/)
 
 
