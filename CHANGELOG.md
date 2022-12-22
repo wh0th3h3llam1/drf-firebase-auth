@@ -7,6 +7,9 @@
 - Add Anonymous Authentication
 
 
+## v1.2.0
+- Add Anonymous Authentication
+
 ## v1.1.0
 - Email Link Authentication working
 - Email & Password Authentication working
