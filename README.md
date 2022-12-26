@@ -22,12 +22,13 @@ A Django REST Wrapper for Firebase Authentication with DRF.
 
 ## 🎉 Features
 
-- ✨Frontend built using [Material Design Lite](https://getmdl.io)
-- ⭐Easily Integrates with Django and Django REST Framework (DRF)
+- ✨ Frontend built using [Material Design Lite](https://getmdl.io)
+- ⭐ Easily Integrates with Django and Django REST Framework (DRF)
 - 🔥 Firebase Authentication included
-- 📲 Supports Phone Number Authentication (Visible/Invisble reCaptcha)
-- 📧Supports Email Link & Email + Password Authentication
-
+- Supported Authentication Methods:
+    - 📲 Phone Number Authentication (Visible/Invisble reCaptcha)
+    - 📧 Email Link & Email + Password Authentication
+    - 🕵️ Anonymous Authentication
 
 ## 🗺️ Roadmap
 

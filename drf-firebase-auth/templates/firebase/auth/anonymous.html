@@ -1,0 +1,298 @@
+{% extends 'firebase/auth/base.html' %}
+
+{% block title %}Anonymous Authentication{% endblock title %}
+
+
+{% block content %}
+<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+  <div id="sign-in-card"
+    class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+      <h2 class="mdl-card__title-text">Anonymous Authentication</h2>
+    </div>
+    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+      <p>Anonymous Sign-in</p>
+
+      <form id="sign-in-form" action="#">
+        <!-- Button that handles sign-in -->
+        <button disabled
+          class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect white-font"
+          id="sign-in">
+          <i class="material-icons">login</i>
+          Sign In
+        </button>
+      </form>
+
+      <!-- Button that handles sign-out -->
+      <button class="mdl-button mdl-js-button mdl-button--primary mdl-button--raised mdl-js-ripple-effect white-font"
+        id="sign-out-button">
+        <i class="material-icons">logout</i>
+        Sign Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Container for the sign in status and user info -->
+  <div
+    class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop user-details-container">
+    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+      <h2 class="mdl-card__title-text">User Status</h2>
+    </div>
+
+    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+      <!-- Container where we'll display the user details -->
+      <div class="user-details-container">
+        Firebase sign-in status: <span id="sign-in-status" style="font-weight: bold;">Unknown</span>
+        <div>Firebase auth <code>currentUser</code> object value:</div>
+        <pre><code id="account-details">
+          <div class="mdl-spinner mdl-js-spinner is-active"></div>
+        </code></pre>
+        <br />
+
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="user-object-button">
+          <i class="material-icons">code</i>
+          Copy User Object
+        </button>
+      </div>
+    </div>
+    <div class="mdl-card__menu">
+      <button class="mdl-button mdl-js-button mdl-button--icon white-font" id="refresh-button"
+        onclick="window.location.reload()">
+        <i class="material-icons">refresh</i>
+      </button>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+      <button class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect mdl-button--raised white-font"
+        id="copy-accessToken-button">
+        <i class="material-icons">copy_all</i>
+        Copy Access Token
+      </button>
+      &nbsp;
+      <button class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect mdl-button--raised white-font"
+        id="copy-refreshToken-button">
+        <i class="material-icons">autorenew</i>
+        Copy Refresh Token
+      </button>
+      &nbsp;
+      <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised" id="copy-apiKey-button">
+        <i class="material-icons">api</i>
+        Copy API Key
+      </button>
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+<script type="text/javascript">
+  /**
+   * Set up UI event listeners and registering Firebase auth listeners.
+   */
+  window.onload = initApp;
+
+  /**
+   * initApp handles setting up UI event listeners and registering Firebase auth listeners:
+   *  - firebase.auth().onAuthStateChanged: This listener is called when the user is signed in or
+   *    out, and that is where we update the UI.
+   */
+  function initApp() {
+    updateProgressBar("block");
+    // Listening for auth state changes.
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        var uid = user.uid;
+        var email = user.email;
+        var photoURL = user.photoURL;
+        var phoneNumber = user.phoneNumber;
+        var isAnonymous = user.isAnonymous;
+        var displayName = user.displayName;
+        var providerData = user.providerData;
+        var emailVerified = user.emailVerified;
+      }
+      updateSignInButtonUI();
+      updateSignOutButtonUI();
+      updateSignedInUserStatusUI();
+      disableButtons();
+      updateProgressBar();
+    });
+
+    registerEventBindings();
+  };
+
+  function disableButtons() {
+    var user = firebase.auth().currentUser;
+    if (!user) {
+      document.getElementById('copy-accessToken-button').disabled = true;
+      document.getElementById('copy-refreshToken-button').disabled = true;
+      document.getElementById('copy-apiKey-button').disabled = true;
+      document.getElementById('user-object-button').disabled = true;
+    } else {
+      document.getElementById('copy-accessToken-button').disabled = false;
+      document.getElementById('copy-refreshToken-button').disabled = false;
+      document.getElementById('copy-apiKey-button').disabled = false;
+      document.getElementById('user-object-button').disabled = false;
+    }
+  }
+
+  /**
+   * Registers all required event bindings
+   */
+  function registerEventBindings() {
+    // Event bindings.
+    document.getElementById('sign-in-form').addEventListener('submit', onSignInSubmit);
+    document.getElementById('sign-out-button').addEventListener('click', onSignOutClick);
+    document.getElementById('copy-accessToken-button').addEventListener('click', copyAccessToken);
+    document.getElementById('copy-refreshToken-button').addEventListener('click', copyRefreshToken);
+    document.getElementById('copy-apiKey-button').addEventListener('click', copyApiKey);
+    document.getElementById('user-object-button').addEventListener('click', copyUserObject);
+  }
+
+
+  /**
+   * Function called when clicking the Login/Logout button.
+   */
+  function onSignInSubmit(e) {
+    e.preventDefault();
+    updateProgressBar("block");
+
+    firebase.auth().signInAnonymously()
+      .then((user) => {
+        // Signed in..
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+  }
+
+  /**
+   * Updates the Sign-in button state depending on ReCAptcha and form values state.
+   */
+  function updateSignInButtonUI() {
+    if (firebase.auth().currentUser) {
+      document.getElementById('sign-in-form').style.display = 'none';
+    } else {
+      document.getElementById('sign-in-form').style.display = 'block';
+    }
+  }
+
+  /**
+   * Updates the state of the Sign out button.
+   */
+  function updateSignOutButtonUI() {
+    if (firebase.auth().currentUser) {
+      document.getElementById('sign-out-button').style.display = 'block';
+    } else {
+      document.getElementById('sign-out-button').style.display = 'none';
+    }
+  }
+
+  /**
+   * Updates the Signed in user status panel.
+   */
+  function updateSignedInUserStatusUI() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+      document.getElementById('sign-in-status').textContent = 'Signed in';
+      document.getElementById('account-details').innerHTML = prettyPrintJson.toHtml(user, prettyPrintJsonOptions);
+      localStorage.setItem("user_account_details", JSON.stringify(user));
+    } else {
+      document.getElementById('sign-in-status').textContent = 'Signed out';
+      document.getElementById('account-details').textContent = 'Not Available';
+      localStorage.removeItem("user_account_details");
+    }
+  }
+
+  /**
+   * Signs out the user when the sign-out button is clicked.
+   */
+  function onSignOutClick() {
+    firebase.auth().signOut();
+    localStorage.removeItem("user_account_details");
+  }
+
+  function copyApiKey() {
+    'use strict';
+    let api_key = getValue("apiKey");
+    let snackBarmessage = "API Key Copied!"
+    if (api_key) {
+      copy(api_key);
+    } else {
+      snackBarmessage = "No Key Found!"
+    }
+    showSnackBar(snackBarmessage);
+  }
+
+  function copyRefreshToken() {
+    'use strict';
+    let token = getValue("refreshToken");
+    let snackBarmessage = "Refresh Token Copied!"
+    if (token) {
+      copy(token);
+    } else {
+      snackBarmessage = "No Token Found!"
+    }
+    showSnackBar(snackBarmessage);
+  }
+
+  function copyAccessToken() {
+    'use strict';
+    let token = getValue("accessToken");
+    let snackBarmessage = "Access Token Copied!"
+    if (token) {
+      copy(token);
+    } else {
+      snackBarmessage = "No Token Found!"
+    }
+
+    showSnackBar(snackBarmessage);
+  }
+
+  function copyUserObject() {
+    'use strict';
+    let token = getValue("user");
+    let snackBarmessage = "User Object Copied!"
+    if (token) {
+      copyJSON(user)
+    } else {
+      snackBarmessage = "No User Object Found!"
+    }
+
+    showSnackBar(snackBarmessage);
+  }
+
+  function copy(text) {
+    var input = document.createElement('input');
+    input.setAttribute('value', text.trim());
+    document.body.appendChild(input);
+    input.select();
+
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+
+    return result;
+  }
+
+  function copyJSON(jsonData) {
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = JSON.stringify(jsonData);
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+
+    return true
+  }
+
+</script>
+{% endblock script %}
